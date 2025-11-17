@@ -3,7 +3,7 @@ name: 메모앱 CI/CD
 on:
     push:
         branches:
-            - main-cicd
+            main-cicd
 
 jobs:    
     deploy:
