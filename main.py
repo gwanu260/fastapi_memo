@@ -74,8 +74,16 @@ BaseTableModel.metadata.create_all(bind=engine)
 
 
 @app.get("/")
-def home(req : Request):
-    return { "title":"메모 서비스" }
+def home(req : Request,
+         db_conn : Session = Depends(get_connection)
+         ):
+    # html 읽어서 -> 필요한 데이터를 전달하여 -> 데이터 이용하여 동적으로 html 구성
+    # -> html을 응답 => TemplateResponse
+    memos = db_conn.query(Memo).all() # 모든 메모 가져오기
+    return templates.TemplateResponse('memo.html', {
+        "request": req,
+        "memos"  : memos
+    })
 
 # restful 방식으로 URL 설계중 -> CRUD -> 기능만 구현중!!(화면 x) -> API 구현중
 # 메모 신규 생성
@@ -184,4 +192,4 @@ async def delete_memo(memo_id : int,
     db_conn.commit()
 
     # 5. 응답 -> 삭제 성공 메세지 전송
-    return { "type":"success", "msg":"메모가 삭제되었습니다." }
+    return { "type":"success", "msg1":"메모가 삭제되었습니다." }
